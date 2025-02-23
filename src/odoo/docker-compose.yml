@@ -1,0 +1,37 @@
+#This is an example of compose.yml to manage
+#both Odoo and PostgreSQL together.
+version: '3.8'
+
+services:
+  # PostgreSQL Service
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Odoo Service
+  odoo:
+    image: odoo:15.0
+    depends_on:
+      - db
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./custom-addons:/mnt/extra-addons
+    command: odoo --db_host db --db_user odoo --db_password odoo
+
+# Define volumes for persistent data storage
+volumes:
+  postgres_data:
+  odoo_data:

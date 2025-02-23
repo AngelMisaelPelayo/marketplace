@@ -1,0 +1,22 @@
+#This is an example of dockerfile for using odoo
+#We would modify it as needed
+# Use the official Odoo image as the base image
+FROM odoo:15.0
+
+# Set environment variables for Odoo
+ENV ODOO_RC /etc/odoo/odoo.conf
+
+# Copy custom configuration file (optional)
+COPY ./odoo.conf /etc/odoo/odoo.conf
+
+# Expose the Odoo port (default is 8069)
+EXPOSE 8069
+
+# Install any additional Python dependencies if needed
+RUN pip3 install -r /requirements_odoo.txt
+
+# Set the working directory
+WORKDIR /mnt/extra-addons
+
+# Command to run Odoo
+CMD ["odoo"]
